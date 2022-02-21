@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 import java.util.List;
 
 public class BinarySearchTree<T extends Comparable<T>, V> {
@@ -84,7 +85,6 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
 
     /**
      * Recursive method to help with delete method
-     * FROM PROF LEWICKI'S SLIDES
      * @param root the root of the tree containing the node to be deleted
      * @param key the key of the node to be deleted
      * @return 
@@ -131,26 +131,64 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
             else
                 trav = trav.right;
         }
-        if (trav != null)   
+        if (trav != null) 
             remove(trav, parent);
     }
 
     /**
-     * Inorder traversal of the BST recursively
-     * 
-     * @return an inorder list of the values in the BST
+     * Recursive helper method for inorderRec
      */
-    public List<V> inorderRec() {
-        return null;
+    private List<V> inorder(Node root, List<V> list) {
+        if (root == null)
+            return list;
+        inorder(root.left, list);
+        list.add(root.value);
+        inorder(root.right, list);
+        return list;
     }
 
     /**
-     * Returns the k-th smallest element in the BST
-     * 
+     * Inorder traversal of the BST recursively
+     * @return an inorder list of the values in the BST
+     */
+    public List<V> inorderRec() {
+        LinkedList<V> list = new LinkedList<V>();
+        return inorder(root, list);
+    }
+
+    /**
+     * Returns the k-th smallest element in the BST (1-indexed)
      * @param k the position from the smallest element
      * @return the k-th smallest value in the BST
      */
-    public V kthSmasllest(int k) {
+    public V kthSmallest(int k) {
+        LinkedList<V> list = (LinkedList<V>)inorderRec();
+        if (k > 0 && (k-1) < inorderRec().size())
+            return list.get(k-1);
         return null;
+    }
+
+    public static void main(String[] args) {
+        BinarySearchTree<Integer, Integer> tree = new BinarySearchTree<>();
+        System.out.println("BinarySearchTree<Integer, Integer> tree = new BinarySearchTree<>()");
+        tree.insert(2, 2);
+        tree.insert(1, 1);
+        tree.insert(4, 4);
+        tree.insert(5, 5);
+        tree.insert(9, 9);
+        tree.insert(3, 3);
+        tree.insert(6, 6);
+        tree.insert(7, 7);
+        tree.insert(10, 10);
+        tree.insert(12, 12);
+        tree.insert(11, 11);
+        System.out.println("tree.insert(2, 2)\ntree.insert(1, 1)\ntree.insert(4, 4)\ntree.insert(5, 5)\ntree.insert(9, 9)\ntree.insert(3, 3)\ntree.insert(6, 6)\ntree.insert(7, 7)\ntree.insert(10, 10)\ntree.insert(12, 12)\ntree.insert(11, 11)");
+        tree.delete(4);
+        tree.delete(9);
+        System.out.println("tree.delete(4)\ntree.delete(9)");
+        System.out.println("tree.inorderRec()\n" + tree.inorderRec().toString());
+        System.out.println("tree.search(12)\n" + tree.search(12));
+        System.out.println("tree.search(4)\n" + tree.search(4));
+        System.out.println("tree.kthSmallest(3)\n" + tree.kthSmallest(3));
     }
 }
