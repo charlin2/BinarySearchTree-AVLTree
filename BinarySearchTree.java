@@ -85,9 +85,9 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
 
     /**
      * Recursive method to help with delete method
-     * @param root the root of the tree containing the node to be deleted
-     * @param key the key of the node to be deleted
-     * @return 
+     * USING LEWICKI'S SLIDES
+     * @param toDelete the node to be deleted
+     * @param parent the parent node of the node to be deleted
      */
     private void remove(Node toDelete, Node parent) {
         // One or no children
@@ -101,14 +101,15 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
                 root = toDeleteChild;
             else if (toDelete.key.compareTo(parent.key) < 0)
                 parent.left = toDeleteChild;
-            else
+            else 
                 parent.right = toDeleteChild;
-        } else { // Two children
+        } else { // two children
             Node replacementParent = toDelete;
-            Node replacement = toDelete.left;
-            while (replacement.right != null) {
+            Node replacement = toDelete.right;
+            // find largest value in left subtree
+            while (replacement.left != null) {
                 replacementParent = replacement;
-                replacement = replacement.right;
+                replacement = replacement.left;
             }
             toDelete.key = replacement.key;
             toDelete.value = replacement.value;
@@ -118,12 +119,12 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
 
     /**
      * Deletes a specified node if it exists
-     * 
      * @param key the key of the node to be deleted
      */
     public void delete(T key) {
         Node trav = root;
-        Node parent = trav;
+        Node parent = null;
+        // traverse to deletion node
         while (trav != null && trav.key != key) {
             parent = trav;
             if (key.compareTo(trav.key) < 0)
@@ -131,6 +132,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
             else
                 trav = trav.right;
         }
+        // helper method for deletion
         if (trav != null) 
             remove(trav, parent);
     }
@@ -190,5 +192,22 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
         System.out.println("tree.search(12)\n" + tree.search(12));
         System.out.println("tree.search(4)\n" + tree.search(4));
         System.out.println("tree.kthSmallest(3)\n" + tree.kthSmallest(3));
+        BinarySearchTree<Character, String> tree2 = new BinarySearchTree<>();
+        System.out.println("BinarySearchTree<Character, String> tree2 = new BinarySearchTree<>()");
+        tree2.insert('G', "George");
+        tree2.insert('S', "Susan");
+        tree2.insert('J', "Jeff");
+        tree2.insert('B', "Bertha");
+        tree2.insert('M', "Matt");
+        tree2.insert('A', "Alyssa");
+        tree2.insert('L', "Lex");
+        tree2.insert('M', "Madeline");
+        System.out.println("tree2.insert('G', \"George\")\ntree2.insert('S', \"Susan\")\ntree2.insert('J', \"Jeff\")\ntree2.insert('B', \"Bertha\")\ntree2.insert('M', \"Matt\")\ntree2.insert('A', \"Alyssa\")\ntree2.insert('L', \"Lex\")\ntree2.insert('M', \"Madeline\")");
+        System.out.println("tree2.inorderRec()\n" + tree2.inorderRec().toString());
+        tree2.delete('M');
+        tree2.delete('J');
+        System.out.println("tree2.delete('M')\ntree2.delete('J')");
+        System.out.println("tree2.inorderRec()\n" + tree2.inorderRec().toString());
+        System.out.println("tree2.kthSmallest(3)\n" + tree2.kthSmallest(3));
     }
 }

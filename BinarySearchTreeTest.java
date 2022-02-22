@@ -140,6 +140,12 @@ public class BinarySearchTreeTest {
         stringTree.delete("F");
         Assert.assertEquals("[20, 40, 60, 90, 130]", intTree.inorderRec().toString());
         Assert.assertEquals("[Bee, Elephant, Platypus, Zebra]", stringTree.inorderRec().toString());
+        intTree.delete(13);
+        intTree.delete(4);
+        stringTree.delete("B");
+        stringTree.delete("Z");
+        Assert.assertEquals("[20, 60, 90]", intTree.inorderRec().toString());
+        Assert.assertEquals("[Elephant, Platypus]", stringTree.inorderRec().toString());
     }
 
     @Test
