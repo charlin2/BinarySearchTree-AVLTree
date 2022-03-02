@@ -2,21 +2,21 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class BinarySearchTreeTest {
-    BinarySearchTree<Integer, Integer> intTree = new BinarySearchTree<Integer, Integer>();
-    BinarySearchTree<String, String> stringTree = new BinarySearchTree<String, String>();
+    BinarySearchTree<Integer, Integer> intTree = new BinarySearchTree<>();
+    BinarySearchTree<String, String> stringTree = new BinarySearchTree<>();
 
     @Test
     public void testInsertSearch() {
+        // searching nonexistant key (Test 0)
+        Assert.assertEquals(null, intTree.search(100));
+        Assert.assertEquals(null, stringTree.search("Null"));
+
         // Test 0
         intTree.insert(5, 50);
         stringTree.insert("G", "Game");
 
         Assert.assertEquals(Integer.valueOf(50), intTree.search(5));
         Assert.assertEquals("Game", stringTree.search("G"));
-
-        // searching nonexistant key
-        Assert.assertEquals(null, intTree.search(100));
-        Assert.assertEquals(null, stringTree.search("Null"));
 
         // Test many
         intTree.insert(5, 55); // duplicate insert
@@ -25,13 +25,14 @@ public class BinarySearchTreeTest {
         Assert.assertEquals(Integer.valueOf(50), intTree.search(5)); // will return first instance of duplicate key
         Assert.assertEquals("Game", stringTree.search("G"));
 
-        for (int i = 2; i < 8; i++) intTree.insert(i, i*10); 
+        for (int i = 2; i < 8; i++)
+            intTree.insert(i, i * 10);
 
         stringTree.insert("A", "Abacus");
         stringTree.insert("N", "Name");
         stringTree.insert("E", "Elephant");
         stringTree.insert("Z", "Zebra");
-        
+
         Assert.assertEquals(Integer.valueOf(20), intTree.search(2));
         Assert.assertEquals(Integer.valueOf(30), intTree.search(3));
         Assert.assertEquals(Integer.valueOf(40), intTree.search(4));
@@ -86,7 +87,7 @@ public class BinarySearchTreeTest {
         intTree.insert(20, 200);
         intTree.insert(1, 10);
         intTree.insert(7, 70);
-        
+
         stringTree.insert("A", "Abacus");
         stringTree.insert("N", "Name");
         stringTree.insert("E", "Elephant");
@@ -163,7 +164,8 @@ public class BinarySearchTreeTest {
         Assert.assertEquals(null, stringTree.kthSmallest(2));
 
         // Test many
-        for (int i = 2; i < 15; i++) intTree.insert(i, i*10);
+        for (int i = 2; i < 15; i++)
+            intTree.insert(i, i * 10);
         stringTree.insert("A", "Aardvark");
         stringTree.insert("B", "Buffalo");
         stringTree.insert("C", "Cheetah");

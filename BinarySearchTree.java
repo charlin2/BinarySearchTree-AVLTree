@@ -1,6 +1,11 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * P3: Implementation of a Binary Search Tree
+ * 
+ * @author <i>Charlie Lin</i>
+ */
 public class BinarySearchTree<T extends Comparable<T>, V> {
     /** root of tree */
     private Node root;
@@ -23,7 +28,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
          * Node of a BST
          * 
          * @param key   Key used for comparison and value access
-         * @param value Value stored in the noce
+         * @param value Value stored in the node
          */
         private Node(T key, V value) {
             this.key = key;
@@ -86,8 +91,9 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
     /**
      * Recursive method to help with delete method
      * USING LEWICKI'S SLIDES
+     * 
      * @param toDelete the node to be deleted
-     * @param parent the parent node of the node to be deleted
+     * @param parent   the parent node of the node to be deleted
      */
     private void remove(Node toDelete, Node parent) {
         // One or no children
@@ -101,7 +107,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
                 root = toDeleteChild;
             else if (toDelete.key.compareTo(parent.key) < 0)
                 parent.left = toDeleteChild;
-            else 
+            else
                 parent.right = toDeleteChild;
         } else { // two children
             Node replacementParent = toDelete;
@@ -119,6 +125,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
 
     /**
      * Deletes a specified node if it exists
+     * 
      * @param key the key of the node to be deleted
      */
     public void delete(T key) {
@@ -133,7 +140,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
                 trav = trav.right;
         }
         // helper method for deletion
-        if (trav != null) 
+        if (trav != null)
             remove(trav, parent);
     }
 
@@ -151,22 +158,24 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
 
     /**
      * Inorder traversal of the BST recursively
+     * 
      * @return an inorder list of the values in the BST
      */
     public List<V> inorderRec() {
-        LinkedList<V> list = new LinkedList<V>();
+        ArrayList<V> list = new ArrayList<V>();
         return inorder(root, list);
     }
 
     /**
      * Returns the k-th smallest element in the BST (1-indexed)
+     * 
      * @param k the position from the smallest element
      * @return the k-th smallest value in the BST
      */
     public V kthSmallest(int k) {
-        LinkedList<V> list = (LinkedList<V>)inorderRec();
-        if (k > 0 && (k-1) < inorderRec().size())
-            return list.get(k-1);
+        ArrayList<V> list = (ArrayList<V>) inorderRec();
+        if (k > 0 && (k - 1) < list.size())
+            return list.get(k - 1);
         return null;
     }
 
