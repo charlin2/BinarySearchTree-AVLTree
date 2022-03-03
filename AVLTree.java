@@ -83,7 +83,7 @@ public class AVLTree<T extends Comparable<T>, V> {
      * @return the new root of the subtree after the rotation
      */
     private Node rotateRight(Node node) {
-        // save value for rotation
+        // save values for rotation
         Node leftChild = node.left;
         Node leftRightChild = leftChild.right;
         // rotate
@@ -94,9 +94,17 @@ public class AVLTree<T extends Comparable<T>, V> {
         return leftChild;
     }
 
+    /**
+     * Leftward rotation
+     * 
+     * @param node the node to rotated around
+     * @return the new root of the subtree after the rotation
+     */
     private Node rotateLeft(Node node) {
+        // save values for rotation
         Node rightChild = node.right;
         Node rightLeftChild = rightChild.left;
+        // rotate
         rightChild.left = node;
         node.right = rightLeftChild;
         if (node == root)
@@ -107,10 +115,9 @@ public class AVLTree<T extends Comparable<T>, V> {
     /**
      * Recursive insert helper method
      * 
-     * @param root  the root of the tree to be inserted into
-     * @param key   the key of the node to be inserted
-     * @param value the value of the node to be inserted
-     * @return child nodes
+     * @param currentParent the current node to check for insertion
+     * @param newNode       the node to be inserted
+     * @return current node or new node if valid insertion spot
      */
     private Node insert(Node currentParent, Node newNode) {
         if (currentParent == null)
@@ -173,11 +180,13 @@ public class AVLTree<T extends Comparable<T>, V> {
     }
 
     /**
-     * Returns the minimum value in the subtree
-     * @param root
-     * @return
+     * Returns the minimum key in the subtree
+     * Helper method for deletion
+     * 
+     * @param root root of the subtree
+     * @return the node with the smallest key
      */
-    private Node minValue(Node root) {
+    private Node minKey(Node root) {
         Node trav = root;
         while (trav.left != null)
             trav = trav.left;
@@ -186,18 +195,17 @@ public class AVLTree<T extends Comparable<T>, V> {
 
     /**
      * Recursive method to help with delete method
-     * USING LEWICKI'S SLIDES
      * 
      * @param toDelete the node to be deleted
      * @param parent   the parent node of the node to be deleted
      */
     private Node remove(Node root, T key) {
         // traversal
-        if (root == null) 
+        if (root == null)
             return root;
         if (key.compareTo(root.key) < 0)
             root.left = remove(root.left, key);
-        else if (key.compareTo(root.key) > 0) 
+        else if (key.compareTo(root.key) > 0)
             root.right = remove(root.right, key);
         // deletion
         else {
@@ -211,25 +219,24 @@ public class AVLTree<T extends Comparable<T>, V> {
                 if (temp == null) {
                     temp = root;
                     root = null;
-                }
-                else
+                } else
                     root = temp;
             } else { // two children
-                Node temp = minValue(root.right);
+                Node temp = minKey(root.right);
                 root.key = temp.key;
                 root.value = temp.value;
                 root.right = remove(root.right, temp.key);
             }
         }
-        
+
         if (root == null)
             return root;
 
-        // balancing
+        /* balancing */
         int balance = getBalance(root);
 
         // right subtree, right imbalance
-        if (balance > 1 && getBalance(root.right) > 0)
+        if (balance > 1 && getBalance(root.right) >= 0)
             return rotateLeft(root);
         // right subtree, left imbalance
         if (balance > 1 && getBalance(root.right) < 0) {
@@ -237,7 +244,7 @@ public class AVLTree<T extends Comparable<T>, V> {
             return rotateLeft(root);
         }
         // left subtree, left imbalance
-        if (balance < -1 && getBalance(root.left) < 0)
+        if (balance < -1 && getBalance(root.left) <= 0)
             return rotateRight(root);
         // left subtree, right imbalance
         if (balance < -1 && getBalance(root.left) > 0) {
@@ -253,22 +260,12 @@ public class AVLTree<T extends Comparable<T>, V> {
      * @param key the key of the node to be deleted
      */
     public void delete(T key) {
-        remove(root, key);
-        /*
-        Node trav = root;
-        Node parent = null;
-        // traverse to deletion node
-        while (trav != null && trav.key != key) {
-            parent = trav;
-            if (key.compareTo(trav.key) < 0)
-                trav = trav.left;
-            else
-                trav = trav.right;
+        // deleting if only one value in tree
+        if (key.compareTo(root.key) == 0 && root.left == null && root.right == null) {
+            root = null;
+            return;
         }
-        // helper method for deletion
-        if (trav != null)
-            remove(trav, parent);
-        */
+        remove(root, key);
     }
 
     /**
@@ -313,5 +310,37 @@ public class AVLTree<T extends Comparable<T>, V> {
     public List<V> postorder() {
         LinkedList<V> list = new LinkedList<>();
         return postorder(root, list);
+    }
+
+    public static void main(String[] args) {
+        AVLTree<Integer, Integer> AVL = new AVLTree<>();
+        BinarySearchTree<Integer, Integer> BST = new BinarySearchTree<>();
+        double start = System.currentTimeMillis();
+        for (int i = -10000; i <= 10000; i++)
+            BST.insert(i, i);
+        double end = System.currentTimeMillis();
+        System.out.println("Time to insert 20000 values into BST: " + (end - start) + " ms");
+        start = System.currentTimeMillis();
+        for (int i = -10000; i <= 10000; i++)
+            AVL.insert(i, i);
+        end = System.currentTimeMillis();
+        System.out.println("Time to insert 20000 values into AVL tree: " + (end - start) + " ms");
+        start = System.nanoTime();
+        BST.search(10001);
+        end = System.nanoTime();
+        System.out.println("Time to search for null value in BST: " + (end - start) + " ns");
+        start = System.nanoTime();
+        AVL.search(10001);
+        end = System.nanoTime();
+        System.out.println("Time to search for null value in AVL tree: " + (end - start) + " ns");
+        start = System.nanoTime();
+        BST.delete(8000);
+        end = System.nanoTime();
+        System.out.println("Time to delete 8000 in BST: " + (end - start) + " ns");
+        start = System.nanoTime();
+        AVL.delete(8000);
+        end = System.nanoTime();
+        System.out.println("Time to delete 8000 in AVL tree: " + (end - start) + " ns");
+        System.out.println("Running the test multiple times shows that insertion into the AVL tree is on average ~3.5x slower than insertion into the BST due to rotations,\nbut time is made up in the search and delete method on the magnitude of anywhere from 65-100x for search and ~1.5x faster for deletion.");
     }
 }

@@ -38,29 +38,11 @@ public class AVLTreeTest {
         Assert.assertEquals("[-2, 2, 1, 9, 6]", tree.postorder().toString());
         tree.delete(9); // rebalancing
         Assert.assertEquals("[-2, 1, 2, 6]", tree.inorderRec().toString());
-        Assert.assertEquals("[-2, 1, 6, 2]", tree.postorder().toString());
-    }
-
-    public static void main(String[] args) {
-        AVLTree<Integer, Integer> AVL = new AVLTree<>();
-        BinarySearchTree<Integer, Integer> BST = new BinarySearchTree<>();
-        double start = System.currentTimeMillis();
-        for (int i = -10000; i <= 10000; i++)
-            BST.insert(i, i);
-        double end = System.currentTimeMillis();
-        System.out.println("Time to insert 20000 values into BST: " + (end - start) + " ms");
-        start = System.currentTimeMillis();
-        for (int i = -10000; i <= 10000; i++)
-            AVL.insert(i, i);
-        end = System.currentTimeMillis();
-        System.out.println("Time to insert 20000 values into AVL tree: " + (end - start) + " ms");
-        start = System.nanoTime();
-        BST.search(10000);
-        end = System.nanoTime();
-        System.out.println("Time to search for 10000 in BST: " + (end - start) + " ns");
-        start = System.nanoTime();
-        AVL.search(10000);
-        end = System.nanoTime();
-        System.out.println("Time to search for 10000 in AVL tree: " + (end - start) + " ns");
+        Assert.assertEquals("[-2, 2, 6, 1]", tree.postorder().toString());
+        tree.delete(1);
+        tree.delete(-2);
+        tree.delete(6);
+        tree.delete(2); // deleting rest of tree should not throw any errors
+        Assert.assertEquals("[]", tree.inorderRec().toString());
     }
 }

@@ -54,6 +54,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
         // parent node is separate from trav for the sake of inserting
         Node parent = root;
         Node newNode = new Node(key, value);
+        // traverse to insertion point
         while (trav != null) {
             parent = trav;
             if (key.compareTo(trav.key) < 0)
@@ -61,6 +62,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
             else
                 trav = trav.right;
         }
+        // insert new node
         if (parent == null)
             root = newNode;
         else if (newNode.key.compareTo(parent.key) < 0)
@@ -77,6 +79,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
      */
     public V search(T key) {
         Node trav = root;
+        // traverse through tree
         while (trav != null) {
             if (key.compareTo(trav.key) == 0)
                 return trav.value;
@@ -85,6 +88,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
             else
                 trav = trav.right;
         }
+        // if key not found, return null
         return null;
     }
 
@@ -162,7 +166,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
      * @return an inorder list of the values in the BST
      */
     public List<V> inorderRec() {
-        ArrayList<V> list = new ArrayList<V>();
+        ArrayList<V> list = new ArrayList<V>(); // using array list for the kth smallest method due to constant access time
         return inorder(root, list);
     }
 
@@ -173,7 +177,7 @@ public class BinarySearchTree<T extends Comparable<T>, V> {
      * @return the k-th smallest value in the BST
      */
     public V kthSmallest(int k) {
-        ArrayList<V> list = (ArrayList<V>) inorderRec();
+        ArrayList<V> list = (ArrayList<V>) inorderRec(); // array list is constant access time, O(n) insert, overall kthSmallest is O(n)
         if (k > 0 && (k - 1) < list.size())
             return list.get(k - 1);
         return null;
